@@ -13,7 +13,7 @@ MYSql is used as database for storing images metadata
 ### How to use
 
 In order to get a series of images from this source, we need to get the api key of Pixabay.
-Therefore, we should join in Pixabay (with a google mail) and copying the api key from the link [Pixabay-Developer](https://pixabay.com/api/docs/).
+Therefore, we should sign in Pixabay (with a google mail) and copying the api key from the link [Pixabay-Developer](https://pixabay.com/api/docs/).
 
 Then is necessary open your docker-compose.yaml e and writing your key as a env var
 `PIXABAY_API_KEY: <YOUR_API_KEY>`
