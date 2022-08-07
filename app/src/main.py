@@ -1,13 +1,13 @@
 import uvicorn
 
-from fastapi import FastAPI, APIRouter, Depends
+from fastapi import FastAPI, APIRouter, Depends, Response
 from fastapi.responses import JSONResponse
 
 from app.src.connection.connection_minio import MinioClient
 from app.src.connection.connection_mysql import MySQLClient
 from app.src.constants.entities import AnimalEntity, LanguageEntity
 
-from app.src.services.services import count_flow, download_flow
+from app.src.services.services import count_flow, get_flow, download_flow
 
 app = FastAPI(
     title="Pixabay Loading",
@@ -20,7 +20,7 @@ router = APIRouter(
     responses={}
 )
 
-@router.get("/download", tags=["Download"])
+@router.get("/get", tags=["Get Images"])
 async def download_images(
     *,
     minio_client: MinioClient = Depends(MinioClient.init_client),
@@ -30,7 +30,7 @@ async def download_images(
     images_number: int
 ):
 
-    status_code, output = download_flow(mysql_client=mysql_client,
+    status_code, output = get_flow(mysql_client=mysql_client,
                                         minio_client=minio_client,
                                         animal=animal.value,
                                         lang=lang.value,
@@ -48,6 +48,20 @@ async def count_images(
     status_code, output = count_flow(mysql_client=mysql_client)
 
     return JSONResponse(status_code=status_code, content=output)
+
+
+@router.get("/download", tags=["Download Locally"])
+async def download(
+    *,
+    minio_client: MinioClient = Depends(MinioClient.init_client),
+    file_name: str
+):
+
+    status_code, output = download_flow(minio_client=minio_client, file_name=file_name)
+
+    return Response(content=output, status_code=status_code, media_type='image/jpeg')
+
+
 
 # Including FastAPI Router
 app.include_router(router=router)

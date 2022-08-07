@@ -48,3 +48,12 @@ class MinioClient:
                                         object_name=object_name,
                                         data=content,
                                         length=length)
+
+    def get_object(self, file_name: str) -> bytes:
+
+        logger.info(f"Try to retrieve object {file_name} from {MINIO_BUCKET} bucket")
+
+        blob = self.__minio_session.get_object(bucket_name=MINIO_BUCKET,
+                                               object_name=file_name)
+
+        return blob.data

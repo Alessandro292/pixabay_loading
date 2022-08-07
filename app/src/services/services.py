@@ -13,7 +13,7 @@ from app.src.services.utils.utility_functions import image_metadata, build_json
 logger = logging.getLogger(__name__)
 
 
-def download_flow(mysql_client: MySQLClient, minio_client: MinioClient, animal: str, lang: str, images_number: int) -> [int, Any]:
+def get_flow(mysql_client: MySQLClient, minio_client: MinioClient, animal: str, lang: str, images_number: int) -> [int, Any]:
     """
     Service related to /pixabay/download path operation
 
@@ -102,3 +102,10 @@ def count_flow(mysql_client: MySQLClient) -> [int, Any]:
     output_json = build_json(count_animal=count_animal)
 
     return status.HTTP_200_OK, output_json
+
+
+def download_flow(minio_client: MinioClient, file_name: str):
+
+    data = minio_client.get_object(file_name=file_name)
+
+    return status.HTTP_200_OK, data
