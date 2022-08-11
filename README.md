@@ -51,6 +51,6 @@ Metadata json looks like
 
 ### Minio Access
 
-In order to visualize Minio user interface, browse http://minio-container:9001
+In order to visualize Minio user interface, browse http://localhost:9001
 
 Enter the minioadmin/mionioadmin as credential (please note this credential can be change both docker-compose.yaml and variables.py script)

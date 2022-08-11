@@ -1,6 +1,7 @@
 version: "3.7"
 
 services:
+
   database:
     image: mysql:8.0
     container_name: mysql-container
@@ -53,6 +54,9 @@ services:
       MYSQL_SERVER: database
       MINIO_ENDPOINT: minio-container:9000
       PIXABAY_API_KEY: <YOUR_API_KEY>
+    depends_on:
+      - database
+      - storage
 
 
 
