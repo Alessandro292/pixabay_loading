@@ -7,7 +7,7 @@ from app.src.connection.connection_minio import MinioClient
 from app.src.connection.connection_mysql import MySQLClient
 from app.src.constants.entities import AnimalEntity, LanguageEntity
 
-from app.src.services.services import count_flow, get_flow, download_flow
+from app.src.services.services import count_flow, get_flow, download_flow, list_flow
 
 app = FastAPI(
     title="Pixabay Loading",
@@ -50,6 +50,17 @@ async def count_images(
     return JSONResponse(status_code=status_code, content=output)
 
 
+@router.get("/list", tags=["Listing images"])
+async def list_images(
+        *,
+        minio_client: MinioClient = Depends(MinioClient.init_client)
+):
+
+    status_code, output = list_flow(minio_client=minio_client)
+
+    return JSONResponse(status_code=status_code, content=output)
+
+
 @router.get("/download", tags=["Download Locally"])
 async def download(
     *,
@@ -63,7 +74,6 @@ async def download(
 
 
 
-# Including FastAPI Router
 app.include_router(router=router)
 
 if __name__ == "__main__":

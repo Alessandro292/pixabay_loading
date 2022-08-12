@@ -57,3 +57,11 @@ class MinioClient:
                                                object_name=file_name)
 
         return blob.data
+
+    def list_images(self):
+
+         objects_list = list(self.__minio_session.list_objects(bucket_name=MINIO_BUCKET))
+
+         images_name = [obj.object_name for obj in objects_list if 'jpg' in obj.object_name]
+
+         return images_name

@@ -104,6 +104,13 @@ def count_flow(mysql_client: MySQLClient) -> [int, Any]:
     return status.HTTP_200_OK, output_json
 
 
+def list_flow(minio_client: MinioClient):
+
+    images_name = minio_client.list_images()
+
+    return status.HTTP_200_OK, images_name
+
+
 def download_flow(minio_client: MinioClient, file_name: str):
 
     data = minio_client.get_object(file_name=file_name)
