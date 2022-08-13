@@ -1,80 +1,20 @@
 import uvicorn
 
-from fastapi import FastAPI, APIRouter, Depends, Response
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 
-from app.src.connection.connection_minio import MinioClient
-from app.src.connection.connection_mysql import MySQLClient
-from app.src.constants.entities import AnimalEntity, LanguageEntity
-
-from app.src.services.services import count_flow, get_flow, download_flow, list_flow
+from app.src.routers import images
 
 app = FastAPI(
     title="Pixabay Loading",
-    description='Target of the demo is to download images and extract useful metadata from Pixabay'
+    description='Target of the demo is to download images and extract useful metadata from Pixabay',
+    contact={
+        "Name": "Alessandro Impagnatiello"
+    },
+    version="1.0"
 )
 
-router = APIRouter(
-    prefix="/pixabay",
-    dependencies=[],
-    responses={}
-)
 
-@router.get("/get", tags=["Get Images"])
-async def download_images(
-    *,
-    minio_client: MinioClient = Depends(MinioClient.init_client),
-    mysql_client: MySQLClient = Depends(MySQLClient.init_client),
-    animal: AnimalEntity,
-    lang: LanguageEntity,
-    images_number: int
-):
-
-    status_code, output = get_flow(mysql_client=mysql_client,
-                                        minio_client=minio_client,
-                                        animal=animal.value,
-                                        lang=lang.value,
-                                        images_number=images_number)
-
-    return JSONResponse(status_code=status_code, content=output)
-
-
-@router.get("/count", tags=["Count"])
-async def count_images(
-    *,
-    mysql_client: MySQLClient = Depends(MySQLClient.init_client)
-):
-
-    status_code, output = count_flow(mysql_client=mysql_client)
-
-    return JSONResponse(status_code=status_code, content=output)
-
-
-@router.get("/list", tags=["Listing images"])
-async def list_images(
-        *,
-        minio_client: MinioClient = Depends(MinioClient.init_client)
-):
-
-    status_code, output = list_flow(minio_client=minio_client)
-
-    return JSONResponse(status_code=status_code, content=output)
-
-
-@router.get("/download", tags=["Download Locally"])
-async def download(
-    *,
-    minio_client: MinioClient = Depends(MinioClient.init_client),
-    file_name: str
-):
-
-    status_code, output = download_flow(minio_client=minio_client, file_name=file_name)
-
-    return Response(content=output, status_code=status_code, media_type='image/jpeg')
-
-
-
-app.include_router(router=router)
+app.include_router(router=images.router)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, log_config="./config/logging.conf")

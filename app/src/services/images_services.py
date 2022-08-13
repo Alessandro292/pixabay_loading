@@ -8,12 +8,12 @@ from typing import Any
 from app.src.connection.connection_minio import MinioClient
 from app.src.connection.connection_mysql import MySQLClient
 from app.src.config.variables import PIXABAY_API_KEY, PIXABAY_URL
-from app.src.services.utils.utility_functions import image_metadata, build_json
+from app.src.services.utils.utility_functions import get_image_metadata, build_json
 
 logger = logging.getLogger(__name__)
 
 
-def get_flow(mysql_client: MySQLClient, minio_client: MinioClient, animal: str, lang: str, images_number: int) -> [int, Any]:
+def download_service(mysql_client: MySQLClient, minio_client: MinioClient, animal: str, lang: str, images_number: int) -> [int, Any]:
     """
     Service related to /pixabay/download path operation
 
@@ -43,11 +43,11 @@ def get_flow(mysql_client: MySQLClient, minio_client: MinioClient, animal: str, 
 
         filter_images_url = f"{PIXABAY_URL}?key={PIXABAY_API_KEY}&q={animal}&image_type=photo&lang={lang}&order=latest&page=1&per_page={images_number}"
 
-        r = requests.get(filter_images_url, stream=True)
+        response = requests.get(filter_images_url, stream=True)
 
-        if r.status_code == 200:
+        if response.status_code == 200:
             # getting 20 url of images from the previous url
-            series_images_url = [json['previewURL'] for json in r.json()['hits']]
+            series_images_url = [json['previewURL'] for json in response.json()['hits']]
 
             # check if exist Bucket
             minio_client.check_bucket()
@@ -65,7 +65,7 @@ def get_flow(mysql_client: MySQLClient, minio_client: MinioClient, animal: str, 
                                             content=io.BytesIO(r.content),
                                             length=len(r.content))
 
-                    json_object, tupla_sql = image_metadata(image_name=filename, animal=animal,
+                    json_object, tupla_sql = get_image_metadata(image_name=filename, animal=animal,
                                                                        lang=lang, image_bytes=r.content)
 
                     minio_client.put_object(object_name=f'{filename.split(".")[0]}.json',
@@ -92,10 +92,10 @@ def get_flow(mysql_client: MySQLClient, minio_client: MinioClient, animal: str, 
         else:
 
             # return status code not equal to 200
-            return r.status_code, r.content.decode("utf-8")
+            return response.status_code, response.content.decode("utf-8")
 
 
-def count_flow(mysql_client: MySQLClient) -> [int, Any]:
+def counting_service(mysql_client: MySQLClient) -> [int, Any]:
 
     count_animal = mysql_client.group_and_count_db(field="animal")
 
@@ -104,14 +104,14 @@ def count_flow(mysql_client: MySQLClient) -> [int, Any]:
     return status.HTTP_200_OK, output_json
 
 
-def list_flow(minio_client: MinioClient):
+def listing_service(minio_client: MinioClient):
 
     images_name = minio_client.list_images()
 
     return status.HTTP_200_OK, images_name
 
 
-def download_flow(minio_client: MinioClient, file_name: str):
+def getting_service(minio_client: MinioClient, file_name: str):
 
     data = minio_client.get_object(file_name=file_name)
 

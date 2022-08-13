@@ -5,7 +5,7 @@ from PIL import Image
 
 logger = logging.getLogger(__name__)
 
-def image_metadata(image_name: str, animal: str, lang: str, image_bytes: bytes) -> str:
+def get_image_metadata(image_name: str, animal: str, lang: str, image_bytes: bytes) -> str:
 
     image = Image.open(io.BytesIO(image_bytes))
 
