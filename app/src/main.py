@@ -2,7 +2,7 @@ import uvicorn
 
 from fastapi import FastAPI
 
-from app.src.routers import images
+from app.src.api import main_router
 
 app = FastAPI(
     title="Pixabay Loading",
@@ -14,7 +14,7 @@ app = FastAPI(
 )
 
 
-app.include_router(router=images.router)
+app.include_router(router=main_router.router)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, log_config="./config/logging.conf")
