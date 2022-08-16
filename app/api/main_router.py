@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter
 
-from app.src.api.api_v1 import routers_v1
+from app.api.api_v1 import routers_v1
 
 logger = logging.getLogger(__name__)
 

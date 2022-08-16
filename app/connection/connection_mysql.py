@@ -1,7 +1,7 @@
 import logging
 import mysql.connector
 
-from app.src.config.variables import MYSQL_USER, MYSQL_PASSWORD, MYSQL_SERVER, MYSQL_DB
+from app.config.variables import MYSQL_USER, MYSQL_PASSWORD, MYSQL_SERVER, MYSQL_DB
 
 logger = logging.getLogger(__name__)
 

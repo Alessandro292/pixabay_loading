@@ -1,7 +1,7 @@
 import logging
 from minio import Minio
 
-from app.src.config.variables import MINIO_USER, MINIO_BUCKET, MINIO_ENDPOINT, MINIO_PASSWORD
+from app.config.variables import MINIO_USER, MINIO_BUCKET, MINIO_ENDPOINT, MINIO_PASSWORD
 
 logger = logging.getLogger(__name__)
 

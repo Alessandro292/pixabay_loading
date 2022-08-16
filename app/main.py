@@ -2,7 +2,7 @@ import uvicorn
 
 from fastapi import FastAPI
 
-from app.src.api import main_router
+from app.api import main_router
 
 app = FastAPI(
     title="Pixabay Loading",

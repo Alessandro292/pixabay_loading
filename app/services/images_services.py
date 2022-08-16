@@ -5,10 +5,10 @@ import requests
 from fastapi import status
 from typing import Any
 
-from app.src.connection.connection_minio import MinioClient
-from app.src.connection.connection_mysql import MySQLClient
-from app.src.config.variables import PIXABAY_API_KEY, PIXABAY_URL
-from app.src.services.utils.utility_functions import get_image_metadata, build_json
+from app.connection.connection_minio import MinioClient
+from app.connection.connection_mysql import MySQLClient
+from app.config.variables import PIXABAY_API_KEY, PIXABAY_URL
+from app.services.utils.utility_functions import get_image_metadata, build_json
 
 logger = logging.getLogger(__name__)
 

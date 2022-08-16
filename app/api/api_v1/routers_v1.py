@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter
 
-from app.src.api.api_v1.routers import images
+from app.api.api_v1.routers import images
 
 logger = logging.getLogger(__name__)
 

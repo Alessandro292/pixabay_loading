@@ -3,11 +3,11 @@ import logging
 from fastapi import APIRouter, Depends, Response
 from fastapi.responses import JSONResponse
 
-from app.src.connection.connection_minio import MinioClient
-from app.src.connection.connection_mysql import MySQLClient
-from app.src.constants.entities import AnimalEntity, LanguageEntity
+from app.connection.connection_minio import MinioClient
+from app.connection.connection_mysql import MySQLClient
+from app.constants.entities import AnimalEntity, LanguageEntity
 
-from app.src.services.images_services import  counting_service, download_service, getting_service, listing_service
+from app.services.images_services import  counting_service, download_service, getting_service, listing_service
 
 logger = logging.getLogger(__name__)
 
